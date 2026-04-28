@@ -5,67 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Smart Environmental Chemistry Lab | AI 기반 환경화학 연구실</title>
   
-  <style>
-    body {
-      margin: 0;
-      font-family: "Arial", sans-serif;
-      color: #0b2545;
-      background: #f4f7fb;
-      line-height: 1.7;
-    }
+<style>
+  body {
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    color: #0b2545;
+    background: #f4f7fb;
+    line-height: 1.7;
+  }
 
-    header {
-      background: linear-gradient(rgba(5, 45, 35, 0.85), rgba(5, 45, 35, 0.85)),
-                  url("https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1600&q=80");
-      background-size: cover;
-      background-position: center;
-      color: white;
-      padding: 90px 20px;
-      text-align: center;
-    }
+  header {
+    background: linear-gradient(rgba(11, 37, 69, 0.9), rgba(11, 37, 69, 0.9)),
+                url("https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1600&q=80");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+  }
 
-    header h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
+  nav {
+    background: white;
+    padding: 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 10;
+  }
 
-    header p {
-      font-size: 18px;
-      max-width: 850px;
-      margin: auto;
-    }
+  nav a {
+    margin: 0 18px;
+    color: #1e3a8a;   /* 링크 블루 */
+    text-decoration: none;
+    font-weight: bold;
+  }
 
-    nav {
-      background: white;
-      padding: 16px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      z-index: 10;
-    }
+  section {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 24px;
+  }
 
-    nav a {
-      margin: 0 18px;
-      color: #064e3b;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    section {
-      max-width: 1100px;
-      margin: 60px auto;
-      padding: 0 24px;
-    }
-
-    h2 {
-      color: #064e3b;
-      font-size: 30px;
-      border-bottom: 3px solid #064e3b;
-      padding-bottom: 8px;
-      margin-bottom: 30px;
-    }
-
+  h2 {
+    color: #1e3a8a;   /* 제목 블루 */
+    font-size: 30px;
+    border-bottom: 3px solid #1e3a8a;
+    padding-bottom: 8px;
+    margin-bottom: 30px;
+  }
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
