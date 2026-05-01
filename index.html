@@ -1,131 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Environmental Chemistry Lab | AI 기반 환경화학 연구실</title>
-  
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smart Environmental Chemistry Lab</title>
+
 <style>
   body {
     margin: 0;
-    font-family: "Arial", sans-serif;
-    color: #0b2545;
+    font-family: Arial, sans-serif;
     background: #f4f7fb;
-    line-height: 1.7;
+    color: #0b2545;
   }
 
   header {
-    background: linear-gradient(rgba(11, 37, 69, 0.9), rgba(11, 37, 69, 0.9)),
-                url("https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1600&q=80");
+    background: linear-gradient(rgba(11,37,69,0.9), rgba(11,37,69,0.9)),
+                url("https://images.unsplash.com/photo-1532094349884-543bc11b234d");
     background-size: cover;
-    background-position: center;
     color: white;
-    padding: 90px 20px;
+    padding: 80px;
     text-align: center;
   }
 
   nav {
     background: white;
-    padding: 16px;
+    padding: 15px;
     text-align: center;
     position: sticky;
     top: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    z-index: 10;
   }
 
   nav a {
-    margin: 0 18px;
-    color: #1e3a8a;   /* 링크 블루 */
+    margin: 0 15px;
     text-decoration: none;
     font-weight: bold;
+    color: #1e3a8a;
   }
 
+  /* 🔥 핵심: 페이지처럼 보이게 */
   section {
+    display: none;
     max-width: 1100px;
     margin: 60px auto;
-    padding: 0 24px;
+    padding: 0 20px;
+  }
+
+  section.active {
+    display: block;
   }
 
   h2 {
-    color: #1e3a8a;   /* 제목 블루 */
-    font-size: 30px;
     border-bottom: 3px solid #1e3a8a;
     padding-bottom: 8px;
-    margin-bottom: 30px;
   }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-    }
 
-    .card {
-      background: white;
-      padding: 26px;
-      border-radius: 14px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    gap: 20px;
+  }
 
-    .card h3 {
-      color: #0b2545;
-      margin-top: 0;
-    }
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+  }
 
-    .people-card {
-      text-align: center;
-    }
+  .people-card {
+    text-align: center;
+  }
 
-    .people-card img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #e5e7eb;
-      margin-bottom: 15px;
-    }
+  .people-card img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 
-    .publication {
-      background: white;
-      padding: 20px 24px;
-      border-left: 5px solid #1e3a8a;
-      margin-bottom: 18px;
-      border-radius: 8px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
-    }
-
-    .publication strong {
-      color: #0b2545;
-    }
-
-    .tag {
-      display: inline-block;
-      background: #dbeafe;
-      color: #1e3a8a;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 13px;
-      margin-top: 8px;
-    }
-
-    footer {
-      background: #0b2545;
-      color: white;
-      text-align: center;
-      padding: 28px;
-      margin-top: 70px;
-    }
-  </style>
+  footer {
+    background: #0b2545;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+</style>
 </head>
 
 <body>
 
 <header>
   <h1>Smart Environmental Chemistry Lab</h1>
-  <p>
-    AI-based Environmental Chemistry for Micropollutants 
-    AI기반 환경화학 연구실
-  </p>
+  <p>AI-based Environmental Chemistry</p>
 </header>
 
 <nav>
@@ -138,172 +103,70 @@
   <a href="#contact">Contact</a>
 </nav>
 
-<section id="about">
+<!-- 기본 페이지 -->
+<section id="about" class="active">
   <h2>About</h2>
-  <p>
-    The Smart Environmental Chemistry Lab focuses on understanding the fate,
-    transport, remediation, and source tracking of emerging contaminants in
-    water, soil and groundwater environments. Our research integrates
-    AI-based approaches to predict the distribution of emerging contaminants, optimize water treatment technologies, 
-    and assess risk indices for sustainable environmental management.
-  </p>
+  <p>AI-based environmental chemistry lab studying micropollutants.</p>
 </section>
 
 <section id="research">
-  <h2>Research Areas</h2>
-
+  <h2>Research</h2>
   <div class="cards">
-    <div class="card">
-      <h3> Per- and Polyfluoroalkyl substances (PFAS) </h3>
-      <p>
-         Development of pretreatment methods, identification of unknown PFAS compounds, and evaluation of oxidative and reductive treatment technologies.
-     </p>
-    </div>
-
-    <div class="card">
-      <h3>Microplastics (MPs) </h3>
-      <p>
-         Development of reliable pretreatment and analytical methods and investigation of the fate of microplastics in environmental samples.
-      </p>
-    </div>
-
-    <div class="card">
-      <h3>CO₂ Capture in Soil Systems</h3>
-      <p>
-         Construction of soil column systems to investigate CO₂ capture, transport, and stabilization in subsurface environments.
-      </p>
-    </div>
-
-    <div class="card">
-      <h3>AI-based Environmental Chemistry</h3>
-      <p>
-         Machine learning-based prediction of micropollutant occurrence, source attribution of PFAS, and optimization of treatment technologies for emerging contaminants.
-      </p>
-    </div>
+    <div class="card">PFAS</div>
+    <div class="card">Microplastics</div>
+    <div class="card">CO₂ Capture</div>
+    <div class="card">AI</div>
   </div>
 </section>
 
 <section id="projects">
   <h2>Projects</h2>
-
-  <div class="cards">
-    <div class="card">
-      <h3>토양 내 광물-유기물 자가조립 기반 차세대 탄소 흡수 플랫폼 개발 (기후에너지환경부, 2026-2031)</h3>
-      <p>
-        MAOC-Next: A Self-Assembling MinerAl-OrganiC Platform for Next-Generation Soil Carbon Stabilization
-      </p>
-    </div>
-
- <div class="card">
-      <h3>과불화화합물 제거를 위한 유무기 흡착제 고도화 기술 개발 (기후에너지환경부, 2026-2031)</h3>
-      <p>
-        Development of Advanced Organic-Inorganic Adsorbent Technologies for PFAS Removal
-      </p>
-    </div>
-    
-<div class="card">
-      <h3>하천,호소 퇴적물 정밀조사 체계 구축을 위한 통합 평가 방법 연구 (국립환경과학원, 2026)</h3>
-      <p>
-        Development of an Integrated Assessment Framework for Establishing in a Detailed Investigation System for River and Lake Sediments
-      </p>
-    </div>
-  </div>
+  <div class="card">PFAS Project</div>
 </section>
-  
+
 <section id="people">
   <h2>People</h2>
-
-<div class="card people-card">
- <img src="profile.png" alt="PI photo">
-  <h3>Saerom Park, Ph.D.</h3>
-  <p><strong>Principal Investigator</strong></p>
-  <p>
-    Assistant Professor<br>
-    Department of Civil and Environmental Engineering<br>
-    The University of Suwon
-  </p>
-
-  <h4>Education</h4>
-  <ul style="text-align:left;">
-    <li>(2017) Ph.D., Environmental Chemistry, Department of Agronomy, Purdue University</li>
-    <li>(2013) M.S., Environmental Chemistry, Department of Agronomy, Purdue University</li>
-    <li>(2009) B.S., Division of Environmental Science and Ecological Engineering, Korea University</li>
-  </ul>
-
-  <h4>Professional Experience</h4>
-  <ul style="text-align:left;">
-    <li>(2026–Present) Assistant Professor, Department of Civil and Environmental Engineering, The University of Suwon</li>
-    <li>(2023–2026) Associate Professor, University of Science and Technology (UST)</li>
-    <li>(2019–2026) Principal Researcher, Korea Institute of Civil Engineering and Building Technology (KICT)</li>
-    <li>(2018–2019) Postdoctoral Researcher, Korea Institute of Science and Technology (KIST)</li>
-    <li>(2017) Postdoctoral Researcher, The University of Georgia</li>
-    <li>(2010) Researcher, National Institute of Agricultural Sciences</li>
-  </ul>
-</div>
-
-    <div class="card people-card">
-      <img src="https://via.placeholder.com/150" alt="Student photo">
-      <h3>Graduate Students</h3>
-      <p>New members will be updated soon.</p>
-    </div>
-
-    <div class="card people-card">
-      <img src="https://via.placeholder.com/150" alt="Researcher photo">
-      <h3>Undergraduate Researchers</h3>
-      <p>Research opportunities are available for motivated students.</p>
-    </div>
+  <div class="people-card">
+    <img src="profile.png">
+    <h3>Saerom Park</h3>
   </div>
 </section>
 
 <section id="publications">
-  <h2>Selected Publications</h2>
-
-  <div class="publication">
-    <strong>Park, S. et al.</strong> Machine learning-based prediction and source
-    attribution of PFAS contamination in environmental matrices.
-    <br>
-    <span class="tag">PFAS</span>
-    <span class="tag">Machine Learning</span>
-  </div>
-
-  <div class="publication">
-    <strong>Park, S. et al.</strong> Development of advanced treatment technologies
-    for emerging contaminants in water and subsurface environments.
-    <br>
-    <span class="tag">Water Treatment</span>
-    <span class="tag">Emerging Contaminants</span>
-  </div>
-
-  <div class="publication">
-    <strong>Park, S. et al.</strong> Analytical methods for microplastics and
-    trace contaminants in complex environmental samples.
-    <br>
-    <span class="tag">Microplastics</span>
-    <span class="tag">Analytical Chemistry</span>
-  </div>
+  <h2>Publications</h2>
 </section>
 
 <section id="notice">
   <h2>Notice</h2>
+</section>
 
-  <div class="publication">
-    <strong>Recruiting motivated students</strong><br>
-    Graduate and undergraduate students interested in PFAS, microplastics, CO₂ capture, and AI-based environmental chemistry are welcome to contact us.
-    <br>
-    <span class="tag">Recruitment</span>
-  </div>  
-  
 <section id="contact">
   <h2>Contact</h2>
-  <p><strong>Smart Environmental Chemistry Lab</strong></p>
-  <p>Department of Civil and Environmental Engineering, The University of Suwon</p>
-  <p><strong>Email:</strong> saerom@suwon.ac.kr</p>
-  <p><strong>Address:</strong> 18323 경기도 화성시 봉담읍 와우안길 17 미래혁신관 614호</p>
 </section>
 
 <footer>
-  <p>© 2026 Smart Environmental Chemistry Lab. All rights reserved.</p>
+  © 2026 Smart Environmental Chemistry Lab
 </footer>
+
+<!-- 🔥 핵심 JS -->
+<script>
+  const links = document.querySelectorAll("nav a");
+  const sections = document.querySelectorAll("section");
+
+  links.forEach(link => {
+    link.addEventListener("click", function(e) {
+      e.preventDefault();
+
+      const target = this.getAttribute("href").substring(1);
+
+      sections.forEach(sec => sec.classList.remove("active"));
+
+      document.getElementById(target).classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+</script>
 
 </body>
 </html>
