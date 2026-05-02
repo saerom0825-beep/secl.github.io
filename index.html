@@ -1,418 +1,1865 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Smart Environmental Chemistry Lab</title>
-  
+<title>SECL | Smart Environmental Chemistry Laboratory</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    color: #0b2545;
-  }
+:root {
+  --navy: #0d2c6d;
+  --navy-dark: #0b2a58;
+  --navy-deep: #061b40;
+  --gold: #f4a300;
+  --gold-light: #ffc44d;
+  --gold-dark: #c88500;
+  /* 호환 alias (구 변수 사용처 보존) */
+  --teal: var(--gold);
+  --teal-light: var(--gold-light);
+  --white: #ffffff;
+  --light-gray: #f7f9fb;
+  --soft-gray: #eef3f7;
+  --dark-text: #1f2937;
+  --gray-text: #6b7280;
+  --gray-text-light: #9ca3af;
+  --border: #e5e7eb;
+  --font-heading: 'Pretendard Variable', Pretendard, 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', '굴림', Gulim, sans-serif;
+  --font-body: 'Pretendard Variable', Pretendard, 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', '굴림', Gulim, sans-serif;
+}
 
-  header {
-    background: linear-gradient(rgba(11,37,69,0.9), rgba(11,37,69,0.9)),
-                url("https://images.unsplash.com/photo-1532094349884-543bc11b234d");
-    background-size: cover;
-    color: white;
-    padding: 80px;
-    text-align: center;
-  }
+* { box-sizing: border-box; }
 
-  nav {
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--dark-text);
+  background: var(--white);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+/* Top Bar */
+.top-bar {
+  background: var(--navy-dark);
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  padding: 8px 0;
+}
+.top-bar .container { display: flex; justify-content: space-between; }
+
+/* Navbar */
+.navbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: box-shadow 0.2s;
+}
+.navbar.scrolled { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.nav-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 76px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--navy);
+}
+.logo-icon {
+  width: 44px; height: 44px;
+  background: var(--gold);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+.logo-text-wrapper { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-text {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--navy);
+  letter-spacing: 1px;
+}
+.logo-sub { font-size: 11px; color: var(--gray-text); letter-spacing: 0.5px; }
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+}
+.nav-menu a {
+  display: block;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: var(--dark-text);
+  font-weight: 500;
+  font-size: 15px;
+  border-radius: 6px;
+  transition: all 0.18s;
+}
+.nav-menu a:hover { color: var(--navy); background: var(--light-gray); }
+.nav-menu a.active { color: white; background: var(--navy); }
+
+.hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; }
+.hamburger .bar { width: 24px; height: 2px; background: var(--navy); }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, #134e7c 100%);
+  color: white;
+  padding: 110px 0 130px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 30%, rgba(244,163,0,0.18), transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(244,163,0,0.15), transparent 50%);
+}
+.hero .container { position: relative; }
+.hero-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 52px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  letter-spacing: -0.5px;
+}
+.hero-korean {
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--teal-light);
+  margin: 0 0 28px;
+  font-family: var(--font-heading);
+  letter-spacing: -0.5px;
+}
+.hero-line { width: 60px; height: 3px; background: var(--teal); margin: 0 auto 28px; }
+.hero-motto {
+  max-width: 720px;
+  margin: 0 auto 16px;
+  font-size: 22px;
+  line-height: 1.5;
+  color: white;
+  font-style: italic;
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+.hero-description {
+  max-width: 720px;
+  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.8);
+}
+
+/* Sections — landing toggle */
+.hero { display: none; }
+.hero.active { display: block; }
+.section { padding: 90px 0; display: none; }
+.section.active { display: block; }
+.section.alt { background: var(--light-gray); }
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 34px;
+  color: var(--navy);
+  margin: 0 0 12px;
+  text-align: center;
+  position: relative;
+  padding-bottom: 18px;
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 50px; height: 3px;
+  background: var(--teal);
+}
+.section-subtitle {
+  text-align: center;
+  color: var(--navy);
+  margin: 0 0 56px;
+  font-size: 22px;
+  font-weight: 500;
+  font-family: var(--font-heading);
+  letter-spacing: -0.3px;
+}
+
+/* About */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 56px;
+  align-items: center;
+  margin-bottom: 60px;
+}
+.about-visual {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #fff8e8 0%, #f0f5fa 100%);
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 32px rgba(13, 44, 109, 0.1);
+}
+.about-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.about-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(13, 44, 109, 0.35) 0%, rgba(244, 163, 0, 0.25) 100%);
+  pointer-events: none;
+}
+.about-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+.about-text h2 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 30px;
+  margin: 0 0 20px;
+}
+.about-text p { color: var(--dark-text); margin: 0 0 16px; }
+.about-text .en { color: var(--gray-text); font-size: 14.5px; }
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary { background: var(--navy); color: white; margin-top: 12px; }
+.btn-primary:hover { background: var(--navy-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(13,44,109,0.3); }
+.btn-outline { background: transparent; color: white; border: 1.5px solid white; }
+.btn-outline:hover { background: white; color: var(--navy); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 20px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.stat-card:hover { border-color: var(--teal); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+.stat-icon { color: var(--teal); font-size: 26px; margin-bottom: 12px; }
+.stat-number {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+.stat-label { display: block; margin-top: 8px; color: var(--gray-text); font-size: 13px; letter-spacing: 0.5px; }
+
+/* Research Cards */
+.research-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.research-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0;
+  text-align: center;
+  transition: all 0.25s;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.research-card:hover {
+  border-color: var(--teal);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.1);
+}
+.card-illust {
+  height: 130px;
+  background: linear-gradient(135deg, #eef5fa 0%, #fef3d8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+.card-illust svg { width: 100%; height: 100%; display: block; }
+.card-body { padding: 24px 20px 26px; flex: 1; display: flex; flex-direction: column; }
+.card-tag {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--teal);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.research-card h3 {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  color: var(--navy);
+  margin: 0 0 4px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.card-en-sub {
+  font-size: 13px;
+  color: var(--gray-text);
+  margin: 0 0 10px;
+  font-weight: 500;
+  font-style: italic;
+}
+.card-ko {
+  font-size: 13px;
+  color: var(--dark-text);
+  margin: 0 0 14px;
+  line-height: 1.55;
+}
+.card-divider {
+  width: 30px;
+  height: 1.5px;
+  background: var(--border);
+  margin: 0 auto 12px;
+}
+.card-en {
+  font-size: 12.5px;
+  color: var(--gray-text);
+  margin: 0;
+  line-height: 1.55;
+  font-style: italic;
+}
+
+/* Projects */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.project-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  transition: all 0.2s;
+  border-top: 4px solid var(--teal);
+}
+.project-card:hover { box-shadow: 0 10px 24px rgba(0,0,0,0.08); transform: translateY(-3px); }
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.project-number {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  color: var(--navy);
+  font-weight: 700;
+  opacity: 0.4;
+}
+.status {
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.status.completed {
+  background: var(--navy);
+  color: white;
+}
+.subsection-title {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 22px;
+  margin: 0 0 28px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.subsection-title .badge {
+  font-size: 12px;
+  background: var(--gold);
+  color: var(--navy);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.subsection-title .badge.completed {
+  background: var(--navy);
+  color: white;
+}
+.subsection-title .count {
+  font-size: 14px;
+  color: var(--gray-text);
+  font-weight: 400;
+  margin-left: auto;
+}
+.project-card.placeholder {
+  background: #fafbfc;
+  border-style: dashed;
+  border-top-color: var(--border);
+}
+.project-card.placeholder .project-number,
+.project-card.placeholder h3,
+.project-card.placeholder .agency,
+.project-card.placeholder .date { color: var(--gray-text-light); }
+.project-card .agency {
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+.project-card h3 {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  color: var(--navy);
+  margin: 0 0 16px;
+  line-height: 1.5;
+  min-height: 76px;
+}
+.project-card .date { color: var(--gray-text); font-size: 13px; margin: 0; }
+
+/* People */
+.people-card {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 48px;
+  align-items: start;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+}
+.profile { text-align: center; }
+.profile img {
+  width: 210px;
+  height: 245px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 4px solid var(--soft-gray);
+  margin-bottom: 16px;
+}
+.profile h3 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+.profile .position { color: var(--gray-text); font-size: 14px; margin: 0; }
+.info h4 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 16px;
+  margin: 24px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--soft-gray);
+}
+.info h4:first-child { margin-top: 0; }
+.info ul { padding-left: 20px; margin: 0; }
+.info li { margin-bottom: 6px; font-size: 14.5px; color: var(--dark-text); }
+.info li strong { color: var(--navy); display: inline-block; min-width: 110px; }
+
+/* Members */
+.members-cta {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 44px 40px;
+  text-align: center;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.members-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 30%, rgba(244,163,0,0.18), transparent 55%);
+  pointer-events: none;
+}
+.members-cta i.fa-user-plus {
+  font-size: 32px;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.members-cta h3 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  margin: 0 0 10px;
+  color: white;
+}
+.members-cta .ko { font-size: 17px; margin: 0 0 8px; color: white; line-height: 1.6; }
+.members-cta .en {
+  font-size: 14.5px;
+  margin: 0 0 24px;
+  color: rgba(255,255,255,0.8);
+  font-style: italic;
+  line-height: 1.6;
+}
+.members-cta .btn {
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: 700;
+}
+.members-cta .btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(244,163,0,0.35);
+}
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.member-card {
+  background: #fafbfc;
+  border: 1.5px dashed var(--border);
+  border-radius: 12px;
+  padding: 28px 20px;
+  text-align: center;
+}
+.member-avatar {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--soft-gray);
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-text-light);
+  font-size: 28px;
+}
+.member-card .role {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  color: var(--navy);
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+.member-card .vacancy {
+  font-size: 12.5px;
+  color: var(--gray-text-light);
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Publications */
+.pub-actions { text-align: center; margin-bottom: 36px; }
+.pub-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: pub-counter;
+}
+.pub-list li {
+  counter-increment: pub-counter;
+  background: white;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: 6px;
+  padding: 16px 20px 16px 56px;
+  margin-bottom: 10px;
+  position: relative;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--dark-text);
+}
+.pub-list li::before {
+  content: counter(pub-counter);
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 16px;
+  background: var(--soft-gray);
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pub-list li i { color: var(--gray-text); }
+.pub-source { font-size: 12px; color: var(--gray-text-light); text-align: center; margin-top: 24px; }
+
+/* Notice */
+.notice-box {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 36px;
+}
+.notice-box .lead-ko { font-size: 18px; font-weight: 500; color: var(--navy); margin: 0 0 8px; }
+.notice-box .lead-en { color: var(--gray-text); font-style: italic; margin: 0 0 28px; }
+.notice-box hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+.notice-box h3 {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 18px;
+  margin: 0 0 14px;
+}
+.video-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+.video-list li { margin: 0; }
+.video-card {
+  display: block;
+  text-decoration: none;
+  color: var(--dark-text);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.video-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+.video-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #000;
+  overflow: hidden;
+}
+.video-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+.video-card:hover .video-thumb img { transform: scale(1.04); }
+.video-thumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%);
+  z-index: 1;
+}
+.video-thumb::after {
+  content: "\f144";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.92);
+  font-size: 48px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  opacity: 0.85;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.video-card:hover .video-thumb::after {
+  opacity: 1;
+  color: #c4302b;
+  transform: scale(1.1);
+}
+.video-info { padding: 14px 16px 16px; }
+.video-info .title {
+  font-size: 13.5px;
+  color: var(--dark-text);
+  font-weight: 500;
+  line-height: 1.45;
+  margin: 0 0 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 39px;
+}
+.video-info .platform {
+  font-size: 11px;
+  color: #c4302b;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* News Cards */
+.notice-subtitle {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-size: 18px;
+  margin: 36px 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.notice-subtitle i { color: var(--gold); }
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.news-grid li { margin: 0; }
+.news-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--dark-text);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s;
+  height: 100%;
+}
+.news-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.08);
+}
+.news-thumb {
+  position: relative;
+  height: 130px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.news-thumb.green { background: linear-gradient(135deg, #1a7556 0%, #0f4d3a 100%); }
+.news-thumb.brown { background: linear-gradient(135deg, #7a4f1a 0%, #4a3010 100%); }
+.news-thumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 30%, rgba(244,163,0,0.22), transparent 60%);
+}
+.news-thumb svg { position: relative; z-index: 1; opacity: 0.9; }
+.news-cat {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  z-index: 2;
+}
+.news-body { padding: 18px 18px 20px; flex: 1; display: flex; flex-direction: column; }
+.news-body h4 {
+  font-family: var(--font-heading);
+  font-size: 15.5px;
+  color: var(--navy);
+  margin: 0 0 12px;
+  font-weight: 700;
+  line-height: 1.45;
+  flex: 1;
+}
+.news-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--gray-text);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.news-meta .source {
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.3px;
+}
+.news-meta .date i { margin-right: 4px; opacity: 0.7; }
+
+/* Contact */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+.contact-info { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 36px; }
+.contact-info dl { margin: 0; display: grid; grid-template-columns: 120px 1fr; row-gap: 14px; column-gap: 16px; }
+.contact-info dt { color: var(--gray-text); font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; align-self: center; }
+.contact-info dd { margin: 0; color: var(--dark-text); font-size: 15px; }
+.contact-info dd a { color: var(--navy); text-decoration: none; }
+.contact-info dd a:hover { text-decoration: underline; }
+
+.contact-cta {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.contact-cta h3 { font-family: var(--font-heading); margin: 0 0 12px; font-size: 22px; }
+.contact-cta p { color: rgba(255,255,255,0.85); margin: 0 0 24px; font-size: 15px; }
+.contact-cta .btn { background: var(--teal); color: white; }
+.contact-cta .btn:hover { background: #c88500; transform: translateY(-2px); }
+.contact-cta .btn + .btn { margin-top: 10px; background: transparent; border: 1.5px solid white; }
+.contact-cta .btn + .btn:hover { background: white; color: var(--navy); }
+
+/* Footer */
+.footer { background: var(--navy-dark); color: rgba(255,255,255,0.8); padding: 56px 0 0; }
+.footer-content {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 40px;
+}
+.footer-logo { display: flex; flex-direction: column; gap: 8px; }
+.footer-logo .logo-icon { width: 48px; height: 48px; }
+.footer-logo .logo-text { color: white; font-size: 22px; }
+.footer-logo .logo-sub { color: rgba(255,255,255,0.6); }
+.footer-info p { margin: 0 0 8px; font-size: 14px; }
+.footer-info strong { color: white; }
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+.footer-links a:hover { color: var(--teal-light); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 20px 0;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .nav-menu { display: none; }
+  .hamburger { display: flex; }
+  .nav-menu.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 76px; left: 0; right: 0;
     background: white;
-    padding: 15px;
-    text-align: center;
-    position: sticky;
-    top: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
   }
-
-  nav a {
-    margin: 0 15px;
-    text-decoration: none;
-    font-weight: bold;
-    color: #1e3a8a;
-  }
-
-  /* 🔥 핵심: 페이지처럼 보이게 */
-  section {
-    display: none;
-    max-width: 1100px;
-    margin: 60px auto;
-    padding: 0 20px;
-  }
-
-  section.active {
-    display: block;
-  }
-
-  h2 {
-    border-bottom: 3px solid #1e3a8a;
-    padding-bottom: 8px;
-  }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-    gap: 20px;
-  }
-
-  .card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-  }
-
-  .people-card {
-    text-align: center;
-  }
-
-  .people-card img {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  footer {
-    background: #0b2545;
-    color: white;
-    text-align: center;
-    padding: 20px;
-  }
+  .hero-title { font-size: 36px; }
+  .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .research-cards { grid-template-columns: 1fr 1fr; }
+  .project-grid { grid-template-columns: 1fr; }
+  .people-card { grid-template-columns: 1fr; gap: 24px; padding: 28px; }
+  .footer-content { grid-template-columns: 1fr; gap: 32px; }
+}
+@media (max-width: 540px) {
+  .research-cards { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .hero { padding: 70px 0 90px; }
+  .section { padding: 60px 0; }
+}
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Smart Environmental Chemistry Lab</h1>
-  <p>AI기반 환경화학 연구실</p>
-</header>
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="container">
+    <span>The University of Suwon &middot; Department of Civil and Environmental Engineering</span>
+    <span><i class="fas fa-envelope"></i> saerom@suwon.ac.kr</span>
+  </div>
+</div>
 
-<nav>
-  <a href="#about">About</a>
-  <a href="#research">Research</a>
-  <a href="#projects">Projects</a>
-  <a href="#people">People</a>
-  <a href="#publications">Publications</a>
-  <a href="#notice">Notice</a>
-  <a href="#contact">Contact</a>
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="#top" class="logo">
+      <div class="logo-icon">SEC</div>
+      <div class="logo-text-wrapper">
+        <span class="logo-text">SEC Lab.</span>
+        <span class="logo-sub">Smart Environmental Chemistry</span>
+      </div>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#people">People</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#notice">Notice</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </div>
+  </div>
 </nav>
 
-<!-- 기본 페이지 -->
-<section id="about" class="active">
-  <h2>About</h2>
-  
-  <p>"Small Signals, Big Solutions"
-    Smart Environmental Chemistry Lab(SEC Lab)은 과불화화합물(PFAS), 미세플라스틱(MPs) 등 신종유해물질의 환경 중 오염 현황, 거동, 처리기술을 연구합니다. 본 연구실은 물리·화학적 실험과 AI 기반 예측·최적화 기법을 융합하여, 오염물질의 분포 예측, 수처리 공정 최적화, 오염원 평가 등 기존 실험 연구와 데이터 기반 접근 사이의 간극을 메우는 것을 목표로 합니다. </p>
-
-  
-  <p style="margin-top:20px; color:#555;">
-The Smart Environmental Chemistry Lab focuses on emerging contaminants such as per- and polyfluoroalkyl substances (PFAS) and microplastics (MPs), investigating their occurrence, environmental fate, and treatment technologies. By integrating physicochemical experiments with AI-based prediction and optimization approaches, the lab aims to bridge the gap between conventional experimental research and data-driven methodologies, enabling the prediction of contaminant distribution, optimization of water treatment processes, and identification of contamination sources.
-</p>
-</section>
-
-<section id="research">
-  <h2>Research</h2>
-  <div class="cards">
-    <div class="card">PFAS</div>
-    <div class="card">Microplastics</div>
-    <div class="card">CO₂ Capture</div>
-    <div class="card">AI</div>
+<!-- Hero (랜딩 시 about과 함께 표시) -->
+<section class="hero active" id="top">
+  <div class="container">
+    <span class="hero-badge">The University of Suwon</span>
+    <h1 class="hero-title">Smart Environmental Chemistry Lab</h1>
+    <p class="hero-korean">스마트 환경화학 연구실</p>
+    <div class="hero-line"></div>
+    <p class="hero-motto">"Small Signals, Big Solutions"</p>
+    <p class="hero-description">Bridging experimental environmental chemistry and AI-driven analysis</p>
   </div>
 </section>
 
-<section id="projects">
-  <h2>Projects</h2>
-
-<div class="project-container">
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-number">01</span>
-        <span class="status">ONGOING</span>
+<!-- About (랜딩 기본 노출) -->
+<section class="section active" id="about">
+  <div class="container">
+    <h2 class="section-title">About</h2>
+    <p class="section-subtitle">AI 기반 환경화학 연구실</p>
+    <div class="about-grid">
+      <div class="about-text">
+        <h2>Welcome to SEC Lab</h2>
+        <p>Smart Environmental Chemistry Lab(SEC Lab)은 과불화화합물(PFAS), 미세플라스틱(MPs) 등 신종유해물질의 환경 중 오염 현황, 거동, 처리기술을 연구합니다. 본 연구실은 물리·화학적 실험과 AI 기반 예측·최적화 기법을 융합하여, 오염물질의 분포 예측, 수처리 공정 최적화, 오염원 평가 등 기존 실험 연구와 데이터 기반 접근 사이의 간극을 메우는 것을 목표로 합니다.</p>
+        <p class="en">The Smart Environmental Chemistry Lab focuses on emerging contaminants such as per- and polyfluoroalkyl substances (PFAS) and microplastics (MPs), investigating their occurrence, environmental fate, and treatment technologies. By integrating physicochemical experiments with AI-based prediction and optimization, the lab aims to bridge the gap between conventional experimental research and data-driven methodologies.</p>
+        <a href="#contact" class="btn btn-primary">Get in Touch</a>
       </div>
+      <!-- About Visual -->
+      <!-- 자체 이미지로 교체: about.jpg 파일을 동일한 이름으로 덮어쓰면 됨 -->
+      <div class="about-visual">
+        <img src="about.jpg" alt="Smart Environmental Chemistry Lab — Glassware">
+        <!-- 이미지 위 오버레이: 분자 구조 + 데이터 노드 (사이트 컬러 일관) -->
+        <svg class="about-overlay" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <defs>
+            <radialGradient id="nodeGrad">
+              <stop offset="0%" stop-color="#fff" stop-opacity="0.95"/>
+              <stop offset="100%" stop-color="#ffc44d" stop-opacity="0.6"/>
+            </radialGradient>
+          </defs>
 
-      <p class="agency">기후에너지환경부</p>
+          <!-- AI 다층 신경망 (좌상단 강조) -->
+          <g transform="translate(20,30)">
+            <!-- 연결선: input → hidden -->
+            <g stroke="#f4a300" stroke-width="1.3" opacity="0.7" fill="none">
+              <line x1="10" y1="20" x2="60" y2="10"/>
+              <line x1="10" y1="20" x2="60" y2="40"/>
+              <line x1="10" y1="20" x2="60" y2="70"/>
+              <line x1="10" y1="20" x2="60" y2="100"/>
+              <line x1="10" y1="55" x2="60" y2="10"/>
+              <line x1="10" y1="55" x2="60" y2="40"/>
+              <line x1="10" y1="55" x2="60" y2="70"/>
+              <line x1="10" y1="55" x2="60" y2="100"/>
+              <line x1="10" y1="90" x2="60" y2="10"/>
+              <line x1="10" y1="90" x2="60" y2="40"/>
+              <line x1="10" y1="90" x2="60" y2="70"/>
+              <line x1="10" y1="90" x2="60" y2="100"/>
+            </g>
+            <!-- 연결선: hidden → output -->
+            <g stroke="#0d2c6d" stroke-width="1.3" opacity="0.65" fill="none">
+              <line x1="60" y1="10" x2="120" y2="35"/>
+              <line x1="60" y1="10" x2="120" y2="75"/>
+              <line x1="60" y1="40" x2="120" y2="35"/>
+              <line x1="60" y1="40" x2="120" y2="75"/>
+              <line x1="60" y1="70" x2="120" y2="35"/>
+              <line x1="60" y1="70" x2="120" y2="75"/>
+              <line x1="60" y1="100" x2="120" y2="35"/>
+              <line x1="60" y1="100" x2="120" y2="75"/>
+            </g>
+            <!-- input layer -->
+            <g fill="#fff" stroke="#0d2c6d" stroke-width="1.8">
+              <circle cx="10" cy="20" r="7"/>
+              <circle cx="10" cy="55" r="7"/>
+              <circle cx="10" cy="90" r="7"/>
+            </g>
+            <!-- hidden layer (활성화 강조: teal fill) -->
+            <g fill="#f4a300" stroke="#0d2c6d" stroke-width="1.5">
+              <circle cx="60" cy="10" r="8"/>
+              <circle cx="60" cy="40" r="8"/>
+              <circle cx="60" cy="70" r="8"/>
+              <circle cx="60" cy="100" r="8"/>
+            </g>
+            <!-- output layer -->
+            <g fill="#0d2c6d" stroke="#0d2c6d" stroke-width="1.5">
+              <circle cx="120" cy="35" r="8"/>
+              <circle cx="120" cy="75" r="8"/>
+            </g>
+          </g>
 
-      <h3>토양 내 광물-유기물 자가조립 기반 차세대 탄소 흡수 플랫폼 개발</h3>
+          <!-- AI 노드 네트워크 (하단) -->
+          <g stroke="#f4a300" stroke-width="1.2" opacity="0.7">
+            <line x1="50" y1="240" x2="120" y2="215"/>
+            <line x1="50" y1="240" x2="180" y2="240"/>
+            <line x1="120" y1="215" x2="180" y2="240"/>
+            <line x1="120" y1="215" x2="240" y2="225"/>
+            <line x1="180" y1="240" x2="240" y2="225"/>
+            <line x1="180" y1="240" x2="310" y2="245"/>
+            <line x1="240" y1="225" x2="310" y2="245"/>
+            <line x1="240" y1="225" x2="350" y2="215"/>
+            <line x1="310" y1="245" x2="350" y2="215"/>
+          </g>
+          <g fill="url(#nodeGrad)" stroke="#0d2c6d" stroke-width="1.5">
+            <circle cx="50" cy="240" r="5"/>
+            <circle cx="120" cy="215" r="6"/>
+            <circle cx="180" cy="240" r="5"/>
+            <circle cx="240" cy="225" r="6"/>
+            <circle cx="310" cy="245" r="5"/>
+            <circle cx="350" cy="215" r="5"/>
+          </g>
 
-      <p class="date">2026 – 2030</p>
-    </div>
-
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-number">02</span>
-        <span class="status">ONGOING</span>
+          <!-- 분자 구조 (우상단) -->
+          <g transform="translate(280,30)" stroke="#0d2c6d" stroke-width="1.5" fill="none" opacity="0.85">
+            <line x1="20" y1="20" x2="50" y2="35"/>
+            <line x1="50" y1="35" x2="80" y2="20"/>
+            <line x1="50" y1="35" x2="50" y2="65"/>
+            <line x1="50" y1="65" x2="80" y2="80"/>
+            <line x1="50" y1="65" x2="20" y2="80"/>
+            <line x1="80" y1="20" x2="110" y2="35"/>
+            <line x1="80" y1="80" x2="110" y2="65"/>
+          </g>
+          <g transform="translate(280,30)">
+            <circle cx="20" cy="20" r="6" fill="#0d2c6d"/>
+            <circle cx="50" cy="35" r="6" fill="#f4a300"/>
+            <circle cx="80" cy="20" r="6" fill="#0d2c6d"/>
+            <circle cx="50" cy="65" r="6" fill="#f4a300"/>
+            <circle cx="20" cy="80" r="6" fill="#0d2c6d"/>
+            <circle cx="80" cy="80" r="6" fill="#f4a300"/>
+            <circle cx="110" cy="35" r="6" fill="#0d2c6d"/>
+            <circle cx="110" cy="65" r="6" fill="#0d2c6d"/>
+          </g>
+        </svg>
       </div>
-
-      <p class="agency">기후에너지환경부</p>
-
-      <h3>과불화화합물 제거를 위한 유무기 흡착제 고도화 기술 개발</h3>
-
-      <p class="date">2026 – 2030</p>
     </div>
 
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-number">03</span>
-        <span class="status">ONGOING</span>
+    <!-- 통계 (About 하단 풀폭) -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+        <span class="stat-number">28</span>
+        <span class="stat-label">Publications</span>
       </div>
-
-      <p class="agency">국립환경과학원</p>
-
-      <h3>하천, 호소 퇴적물 정밀조사 체계 구축을 위한 통합 평가 방법 연구</h3>
-
-      <p class="date">2026</p>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+        <span class="stat-number">3</span>
+        <span class="stat-label">Active Projects</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-flask"></i></div>
+        <span class="stat-number">4</span>
+        <span class="stat-label">Research Areas</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+        <span class="stat-number">2026</span>
+        <span class="stat-label">Established</span>
+      </div>
     </div>
-
   </div>
 </section>
 
-<section id="people">
-  <h2>People</h2>
+<!-- Research -->
+<section class="section alt" id="research">
+  <div class="container">
+    <h2 class="section-title">Research Areas</h2>
+    <p class="section-subtitle">실험과 AI를 결합한 환경 오염물질 연구</p>
+    <div class="research-cards">
 
-  <div class="people-card">
-
-    <!-- 왼쪽: 사진 -->
-    <div class="profile">
-      <img src="profile.png" alt="PI photo">
-      <h3>Professor, Saerom Park</h3>
-    </div>
-
-    <!-- 오른쪽: 정보 -->
-    <div class="info">
-
-      <h4>Education</h4>
-      <ul>
-        <li><strong>2017</strong> Purdue University, Department of Agronomy – Environmental Chemistry (Ph.D.)</li>
-        <li><strong>2013</strong> Purdue University, Department of Agronomy – Environmental Chemistry (M.S.)</li>
-        <li><strong>2009</strong> 고려대학교, 생명과학대 환경생태공학부 (B.S.)</li>
-      </ul>
-
-      <h4>Academic Experience</h4>
-      <ul>
-        <li><strong>2026–Present</strong> 조교수, 수원대학교</li>
-        <li><strong>2023–2026</strong> 부교수, 과학연합대학원대학교 (UST)</li>
-        <li><strong>2020–2026</strong> 수석연구원, 한국건설기술연구원 (KICT)</li>
-        <li><strong>2018–2019</strong> 박사후연구원, 한국과학기술연구원 (KIST)</li>
-        <li><strong>2017</strong> 박사후연구원, The University of Georgia</li>
-        <li><strong>2010</strong> 연구원, 국립농업과학원</li>
-      </ul>
-
-      <h4>Honors and Awards</h4>
-      <ul>
-        <li><strong>2024</strong> 장관상, 과학기술정보통신부</li>
-        <li><strong>2017</strong> Bilsland Dissertation Fellowship, Purdue University</li>
-        <li><strong>2015</strong> 2nd Place Student Poster Award, Fluoros 2015 Conference</li>
-        <li><strong>2014</strong> Best Poster Award, 20th World Congress of Soil Science</li>
-        <li><strong>2012</strong> Scarseth Scholarship, Purdue University</li>
-        <li><strong>2008</strong> 학기 최우등생, 고려대학교</li>
-        <li><strong>2007</strong> 학기 최우등생, 고려대학교</li>
-      </ul>
-
-    </div>
-
-  </div>
-</section>
-
-<section id="publications">
-  <h2>Publications</h2>
-
-  <!-- Google Scholar 링크 -->
-  <p>
-    <a href="https://scholar.google.com/citations?user=5JjzBkwAAAAJ&hl=en" target="_blank" 
-       style="display:inline-block; padding:8px 14px; background:#2c7be5; color:white; text-decoration:none; border-radius:6px;">
-       View Google Scholar Profile
-    </a>
-  </p>
-
-  <!-- 논문 리스트 -->
-  <ul style="list-style:none; padding-left:0; line-height:1.8;">
-
-    <li>S. E. Oh, S. J. Oh, Y. Lee*, S. Park* (2026, In preparation) Machine Learning-Driven Prediction of Post-TOP Assay PFAS concentrations: A Precursor-to-Product Modeling Approach </i></li>
-
-    <li>S. G. Yoon, H. Kim, S. Park, D. H. Moon*, I. S. Kwak, J. An  (2026, In review) Increased mobility and bioaccessibility of arsenate adsorbed onto UV-aged polyvinyl chloride microplastics <i>Ecotoxicology and Environmental Safety</i></i></li>
-    
-    <li>Y. E. Lee, Y. J.*, I. T. Kim, S. Park, K. H. Ahn, J. H. Jung (2026, In review) Organic Acid-Mediated Calcium Recovery and Indirect Carbonation using Food Waste-Derived Biochar <i>Waste Management</i></li>
-    
-    <li>S. J. Oh, J, Chung, M. Kwon, S. Park*, S. Lee* (2026, In review) Coupled effects of infiltration rate and soil texture on nitrate behavior in the unsaturated soil columns <i>Journal of Environmental Managment</i></li>
-
-    <li>Y. E. Lee, S. Park*, J. An*, I. T. Kim (2025) Photo-weathering effects on pyrolysis-GC/MS quantification of Microplastics: Surface oxidation correlations and correction strategies <i>Environmental Pollution</i></li>
-
-    <li>W. Lee, A. Lee, Y. Choi, J. C. Joo, S. Park* (2025) Poly- and perfluoroalkyl substances (PFAS) pollution in South Korean water systems: A critical review of occurrence patterns and regulatory gaps <i>Environmental Engineering Research</i></li>
-
-    <li>S. Park, D. J. Baek, J. An* (2025) Refinement of post-acidification steps in the unified BARGE method for determination of metal bioaccessibility in consumer products <i>Analytica Chimica Acta</i></li>
-
-    <li>G. T. Chavan, R. S. Ingole, P. Rosaiah, M. R. Karim, S. Park*, J. An* (2025) Nanoarchitectured CuAlS@CoMn-layered double hydroxide hybrids for efficient water splitting <i>Journal of Power Sources</i></li>
-
-    <li>B. Lee, S. H. Lee, J. Lee, N. K. Kim, I. Kim, S. Park, S. Kim, S. Y. Ham, H. D. Park, D. Im, H. S. Kim (2025) Influence of wastewater type on microbial community compositions including pathogenic bacteria within wastewater treatment processes <i>Sustainable Environment Research</i></li>
-
-    <li>J. K. Hong, S. J. Oh, T. K. Lee, S. Park* (2025) Matrix-specific PFAS source allocation machine learning models: Identifying differential indicators in soil and water systems <i>Environmental Research</i></li>
-
-    <li>S. S. Park, S. G. Yoon, J. Y. Lee, J. An* (2025) Synergistic interplay of weathered microplastics: Coupling sorption-leaching behavior and environmental risk implications <i>Journal of Hazardous Materials Advances</i></li>
-
-    <li>S. Park*, H. Seok, D. Oh, S. Kim, J. Ahn (2024) Machine learning-based prediction of adsorption capacity of metal-doped and undoped activated carbon: Assessing the role of metal doping <i>Chemosphere</i></li>
-
-    <li>J. K. Hong, T. K. Lee, I. Kim S. Park* (2024) Determination of microbial colonization on microplastics through wastewater treatment processes: The role of polymer type and sequential treatment<i>Science of the Total Environment</i></li>
-
-    <li>J. K. Hong, H. Oh, T. K. Lee, S. Kim, D. Oh, J. An, S. Park* (2023) Tracking the Evolution of Microbial Communities on Microplastics through a Wastewater treatment process: Insight into "Plastisphere" <i>Water</i></li>
-
-    <li>S. Park, I. Kim, W. H. Jeon, H. S. Moon* (2023) Exploring the vertical transport of microplastics in subsurface environments: Lab-scale experiments and field evidence <i>Journal of Contaminant Hydrology</i></li>
-
-    <li>S. J. Oh, K. Cho, S. Park, M. J. Kwon, J. Chung, S. Lee* (2023) Denitrification dynamics in unsaturated soils with different porous structures and water saturation degrees: A focus on the shift in microbial community structures <i>Journal of Hazardous Materials</i></li>
-
-    <li>B. Lee., H. Kang, H. Oh, J. Ahn, S. Park, S. L. Yun, S. Kim (2022) Long-term examination of water chemistry changes following treatment of cyanobacterial bloom with Coagulatns and Minerals <i>IJERPH</i></li>
-
-    <li>H. Kang, S. Park, B. Lee, I. Kim, S. Kim* (2022) Concentration of Microplastics in road dust as a function of the drying period- A case study in G city, Korea <i>Sustainability</i></li>
-
-    <li>S. Park, S. J. Oh, I. Kim* (2021) Role of borate buffer in organic degradation by peroxymonosulfate in the presence of metal oxides<i>Water</i></li>
-
-    <li>H. Kang, S. Park, B. Lee, J. Ahn, S. Kim* (2021) Impact of Chitosan pretreatment to reduce Microfibers released from synthetic garments during landering <i>Water</i></li>
-
-    <li>H. Woo, I. Kim S. Park* (2021) Estimating the Reducing power of carbon nanotubes and Granular activatee carbon using various compounds <i>Water</i></li>
-
-    <li>S. An, P. K. Kang, P. J. Stuyfzand, W. Lee, S. Park, S. T. Yun, S. Lee* (2021) Identification of Iron and sulfate release processes during riverbank filtration using chemical mass balance modeling<i>Environmental Geochemistry and Health</i></li>
-
-    <li>S. Park, E. J. Kim, S. Adil, S. Lee, K. Cho* (2021) Biogeochemical alteration of an Aquifer soil during In-situ chemical oxidation by hydrogen peroxide and peroxymonosulfate <i>Environmental Science & Technology</i></li>
-
-    <li>S. Park, T. M. Anggraini, J. Chung, P. K. Kang, S. Lee* (2021) Microfluidic pore model study of precipitates induced by the pore scale mixing of an iron sulfate solution with simulated groundwater <i>Chemosphere</i></li>
-
-    <li>S. Park, L. S. Lee*, I. Ross, J. Hurst (2020) Evaluating perfluorooctane sulfonate oxidation in permanganate systems <i>Environmental Science and Pollution Research</i></li>
-
-    <li>S. Park, J. E. Zenobio, L. S. Lee* (2018) PFOS removal with Pd/nFe nanoparticles: Adsorption or aqueous Fe-complexaiton, not transformation? <i>Journal of Hazardous Materials</i></li>
-
-    <li>S. Park, C. de Perre, L. S. Lee* (2017) Alternate Reductants with VB12 to Transform C8 and C6 Perfluoroalkyl sulfonates: Limitations and Insights into Isomer-Specific Transforamtion rates, products, and pathways <i>Environmental Science & Technology</i></li>
-
-    <li>S. Park, L. S. Lee*, V. F. Medina, A. Zull, S. Waisner (2016) Heat-activated persulfate oxidation of PFOA, 6:2 fluorotelomer sulfonate, and PFOS under conditons suitable for in-situ groundwater remediaton<i>Chemosphere</i></li>
-
-  </ul>
-
-  <p style="font-size:12px; color:gray;">
-    * Source: uploaded publication list :contentReference[oaicite:0]{index=0}
-  </p>
-
-</section>
-
-<section id="notice">
-  <h2>Notice</h2>
-
-  <div style="line-height:1.8; font-size:16px;">
-
-    <!-- 안내 문구 -->
-    <p><strong>환경화학 또는 AI에 관심있는 학생들은 언제든지 환영합니다.</strong></p>
-    <p><em>Students who are interested in Environmental Chemistry or AI are always welcome to join us.</em></p>
-
-    <hr style="margin:20px 0;">
-
-    <!-- YouTube 링크 -->
-    <h3>Related Videos</h3>
-
-    <ul style="padding-left:20px;">
-
-      <li>
-        <a href="https://www.youtube.com/watch?v=crWNzpNYw_s" target="_blank">
-          Video 1
-        </a>
-      </li>
-
-      <li>
-        <a href="https://www.youtube.com/watch?v=Butm0e3h3Ic" target="_blank">
-          Video 2
-        </a>
-      </li>
-
-      <li>
-        <a href="https://www.youtube.com/watch?v=Uu1uyZjPMss" target="_blank">
-          Video 3
-        </a>
-      </li>
-
-      <li>
-        <a href="https://www.youtube.com/watch?v=kyvJ5hQWk-Y" target="_blank">
-          Video 4
-        </a>
-      </li>
-
-      <li>
-        <a href="https://www.youtube.com/watch?v=rw0jHbgU62Y" target="_blank">
-          Video 5
-        </a>
-      </li>
-
-    </ul>
-
-  </div>
-</section>
-
-<section id="contact">
-  <h2>Contact</h2>
-
-  <div style="line-height:1.8; font-size:16px;">
-
-    <p><strong>Name:</strong> Saerom Park</p>
-
-    <p><strong>Position:</strong> Assistant Professor</p>
-
-    <p><strong>Affiliation:</strong> Department of Civil and Environmental Engineering, The University of Suwon</p>
-
-    <p><strong>Email:</strong> 
-      <a href="mailto:saerom@suwon.ac.kr">saerom@suwon.ac.kr</a>
-    </p>
-
-    <p><strong>Office:</strong> 미래혁신관 614호</p>
-
-    <p><strong>Address:</strong><br>
-      The University of Suwon<br>
-      17 Wauan-gil, Bongdam-eup,<br>
-      Hwaseong-si, Gyeonggi-do, Republic of Korea
-    </p>
-
-    <p><strong>Google Scholar:</strong><br>
-      <a href="https://scholar.google.com/citations?user=5JjzBkwAAAAJ&hl=en" target="_blank">
-        View Profile
+      <!-- 1. PFAS -->
+      <a href="#contact" class="research-card">
+        <div class="card-illust">
+          <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+            <!-- C-F backbone (PFAS의 탄소-불소 사슬) -->
+            <g stroke="#0d2c6d" stroke-width="2" fill="none">
+              <line x1="20" y1="65" x2="50" y2="50"/>
+              <line x1="50" y1="50" x2="80" y2="65"/>
+              <line x1="80" y1="65" x2="110" y2="50"/>
+              <line x1="110" y1="50" x2="140" y2="65"/>
+              <line x1="140" y1="65" x2="170" y2="50"/>
+              <line x1="50" y1="50" x2="50" y2="25"/>
+              <line x1="50" y1="50" x2="35" y2="80"/>
+              <line x1="80" y1="65" x2="80" y2="95"/>
+              <line x1="80" y1="65" x2="100" y2="85"/>
+              <line x1="110" y1="50" x2="110" y2="25"/>
+              <line x1="110" y1="50" x2="130" y2="35"/>
+              <line x1="140" y1="65" x2="140" y2="95"/>
+              <line x1="140" y1="65" x2="160" y2="85"/>
+            </g>
+            <!-- Carbon (검정/navy) -->
+            <g fill="#0d2c6d">
+              <circle cx="50" cy="50" r="7"/>
+              <circle cx="80" cy="65" r="7"/>
+              <circle cx="110" cy="50" r="7"/>
+              <circle cx="140" cy="65" r="7"/>
+            </g>
+            <!-- Fluorine (teal 강조) -->
+            <g fill="#f4a300" stroke="#fff" stroke-width="1.2">
+              <circle cx="50" cy="25" r="6"/>
+              <circle cx="35" cy="80" r="6"/>
+              <circle cx="80" cy="95" r="6"/>
+              <circle cx="100" cy="85" r="6"/>
+              <circle cx="110" cy="25" r="6"/>
+              <circle cx="130" cy="35" r="6"/>
+              <circle cx="140" cy="95" r="6"/>
+              <circle cx="160" cy="85" r="6"/>
+              <circle cx="170" cy="50" r="6"/>
+              <circle cx="20" cy="65" r="6"/>
+            </g>
+            <!-- F label hint -->
+            <text x="50" y="29" text-anchor="middle" fill="white" font-size="7" font-weight="700">F</text>
+            <text x="170" y="54" text-anchor="middle" fill="white" font-size="7" font-weight="700">F</text>
+          </svg>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">RESEARCH 01</span>
+          <h3>과불화화합물 (PFAS)</h3>
+          <p class="card-ko">환경 중 PFAS 및 분해산물 분석, 분포·거동 평가, 흡착·분해 기반 처리 기술 개발</p>
+          <div class="card-divider"></div>
+          <p class="card-en">Analysis of PFAS and degradation products in environmental matrices, occurrence and fate assessment, and development of adsorption- and degradation-based treatment technologies</p>
+        </div>
       </a>
-    </p>
 
-    <!-- 이메일 버튼 (선택) -->
-    <p>
-      <a href="mailto:saerom@suwon.ac.kr"
-         style="display:inline-block; padding:8px 14px; background:#28a745; color:white; text-decoration:none; border-radius:6px;">
-         Send Email
+      <!-- 2. Microplastics -->
+      <a href="#contact" class="research-card">
+        <div class="card-illust">
+          <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+            <!-- 물결 배경 -->
+            <path d="M 0 95 Q 50 85 100 92 T 200 90 L 200 130 L 0 130 Z" fill="#ffc44d" opacity="0.35"/>
+            <path d="M 0 105 Q 50 98 100 103 T 200 100 L 200 130 L 0 130 Z" fill="#f4a300" opacity="0.4"/>
+            <!-- 미세플라스틱 조각들 (불규칙) -->
+            <g stroke="#0d2c6d" stroke-width="1.2">
+              <polygon points="40,40 55,35 60,50 50,58 38,52" fill="#7da6cc" opacity="0.85"/>
+              <polygon points="90,25 108,28 110,42 95,45" fill="#0d2c6d" opacity="0.8"/>
+              <polygon points="135,50 150,45 158,58 148,68 138,62" fill="#f4a300" opacity="0.85"/>
+              <polygon points="65,72 78,68 82,80 70,84" fill="#0d2c6d" opacity="0.7"/>
+              <polygon points="115,75 128,72 132,84 120,88" fill="#7da6cc" opacity="0.8"/>
+              <circle cx="170" cy="38" r="6" fill="#f4a300" opacity="0.7"/>
+              <circle cx="25" cy="75" r="5" fill="#7da6cc" opacity="0.7"/>
+              <circle cx="160" cy="78" r="4" fill="#0d2c6d" opacity="0.6"/>
+            </g>
+            <!-- 작은 입자 -->
+            <g fill="#0d2c6d" opacity="0.4">
+              <circle cx="180" cy="55" r="2"/>
+              <circle cx="15" cy="50" r="2"/>
+              <circle cx="100" cy="60" r="1.8"/>
+              <circle cx="50" cy="20" r="2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">RESEARCH 02</span>
+          <h3>미세플라스틱 (Microplastics)</h3>
+          <p class="card-ko">정성·정량 분석법 개발, 풍화 영향-거동 평가 및 위해성 평가</p>
+          <div class="card-divider"></div>
+          <p class="card-en">Development of qualitative and quantitative analytical methods, weathering-induced fate assessment, and ecological risk evaluation</p>
+        </div>
       </a>
-    </p>
 
+      <!-- 3. CO₂ Stabilization -->
+      <a href="#contact" class="research-card">
+        <div class="card-illust">
+          <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+            <!-- 광물 결정 (육각 결정 구조) -->
+            <g transform="translate(105,55)">
+              <polygon points="0,-35 30,-18 30,18 0,35 -30,18 -30,-18" fill="#0d2c6d" opacity="0.18" stroke="#0d2c6d" stroke-width="1.5"/>
+              <polygon points="0,-22 18,-11 18,11 0,22 -18,11 -18,-11" fill="#f4a300" opacity="0.25" stroke="#f4a300" stroke-width="1.2"/>
+              <line x1="-30" y1="-18" x2="30" y2="18" stroke="#0d2c6d" stroke-width="0.8" opacity="0.5"/>
+              <line x1="30" y1="-18" x2="-30" y2="18" stroke="#0d2c6d" stroke-width="0.8" opacity="0.5"/>
+              <line x1="0" y1="-35" x2="0" y2="35" stroke="#0d2c6d" stroke-width="0.8" opacity="0.5"/>
+            </g>
+            <!-- CO2 분자 위에서 흡수되는 모습 -->
+            <g transform="translate(40,25)">
+              <line x1="0" y1="0" x2="36" y2="0" stroke="#0d2c6d" stroke-width="2"/>
+              <circle cx="0" cy="0" r="7" fill="#f4a300"/>
+              <circle cx="18" cy="0" r="8" fill="#0d2c6d"/>
+              <circle cx="36" cy="0" r="7" fill="#f4a300"/>
+              <text x="0" y="3" text-anchor="middle" fill="white" font-size="7" font-weight="700">O</text>
+              <text x="18" y="3" text-anchor="middle" fill="white" font-size="7" font-weight="700">C</text>
+              <text x="36" y="3" text-anchor="middle" fill="white" font-size="7" font-weight="700">O</text>
+            </g>
+            <!-- 화살표 (CO2 → 광물) -->
+            <g stroke="#f4a300" stroke-width="2" fill="none" opacity="0.7">
+              <line x1="78" y1="38" x2="95" y2="48"/>
+              <polyline points="92,42 95,48 89,49" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <!-- 추가 CO2 분자 (작게) -->
+            <g transform="translate(155,95)" opacity="0.5">
+              <circle cx="0" cy="0" r="4" fill="#f4a300"/>
+              <circle cx="10" cy="0" r="5" fill="#0d2c6d"/>
+              <circle cx="20" cy="0" r="4" fill="#f4a300"/>
+              <line x1="0" y1="0" x2="20" y2="0" stroke="#0d2c6d" stroke-width="1.2"/>
+            </g>
+          </svg>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">RESEARCH 03</span>
+          <h3>CO₂ 안정화</h3>
+          <p class="card-en-sub">(CO₂ Stabilization)</p>
+          <p class="card-ko">토양 내 광물-유기물 결합 탄소 안정화 전략 마련</p>
+          <div class="card-divider"></div>
+          <p class="card-en">Strategies for carbon stabilization through soil mineral-organic complexation</p>
+        </div>
+      </a>
+
+      <!-- 4. AI & ML -->
+      <a href="#contact" class="research-card">
+        <div class="card-illust">
+          <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+            <!-- 연결선: input → hidden -->
+            <g stroke="#f4a300" stroke-width="1.2" opacity="0.6" fill="none">
+              <line x1="30" y1="30" x2="90" y2="20"/>
+              <line x1="30" y1="30" x2="90" y2="55"/>
+              <line x1="30" y1="30" x2="90" y2="90"/>
+              <line x1="30" y1="65" x2="90" y2="20"/>
+              <line x1="30" y1="65" x2="90" y2="55"/>
+              <line x1="30" y1="65" x2="90" y2="90"/>
+              <line x1="30" y1="65" x2="90" y2="110"/>
+              <line x1="30" y1="100" x2="90" y2="55"/>
+              <line x1="30" y1="100" x2="90" y2="90"/>
+              <line x1="30" y1="100" x2="90" y2="110"/>
+            </g>
+            <!-- 연결선: hidden → output -->
+            <g stroke="#0d2c6d" stroke-width="1.2" opacity="0.6" fill="none">
+              <line x1="90" y1="20" x2="160" y2="50"/>
+              <line x1="90" y1="20" x2="160" y2="85"/>
+              <line x1="90" y1="55" x2="160" y2="50"/>
+              <line x1="90" y1="55" x2="160" y2="85"/>
+              <line x1="90" y1="90" x2="160" y2="50"/>
+              <line x1="90" y1="90" x2="160" y2="85"/>
+              <line x1="90" y1="110" x2="160" y2="50"/>
+              <line x1="90" y1="110" x2="160" y2="85"/>
+            </g>
+            <!-- input -->
+            <g fill="#fff" stroke="#0d2c6d" stroke-width="1.8">
+              <circle cx="30" cy="30" r="7"/>
+              <circle cx="30" cy="65" r="7"/>
+              <circle cx="30" cy="100" r="7"/>
+            </g>
+            <!-- hidden (활성화 강조) -->
+            <g fill="#f4a300" stroke="#0d2c6d" stroke-width="1.5">
+              <circle cx="90" cy="20" r="8"/>
+              <circle cx="90" cy="55" r="8"/>
+              <circle cx="90" cy="90" r="8"/>
+              <circle cx="90" cy="110" r="8"/>
+            </g>
+            <!-- output -->
+            <g fill="#0d2c6d" stroke="#0d2c6d" stroke-width="1.5">
+              <circle cx="160" cy="50" r="8"/>
+              <circle cx="160" cy="85" r="8"/>
+            </g>
+          </svg>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">RESEARCH 04</span>
+          <h3>인공지능 (AI)</h3>
+          <p class="card-ko">머신러닝 기반 오염물질 분포 예측, 수처리 기술 최적화, 오염원 평가, 분자 특성 기반 분석법 개발 및 위해성 평가</p>
+          <div class="card-divider"></div>
+          <p class="card-en">Machine learning-based prediction of contaminant distribution, optimization of water treatment, source apportionment, molecular descriptor-based analytical method development, and risk assessment</p>
+        </div>
+      </a>
+
+    </div>
   </div>
 </section>
 
-<footer>
-  © 2026 Smart Environmental Chemistry Lab
+<!-- Projects -->
+<section class="section" id="projects">
+  <div class="container">
+    <h2 class="section-title">Projects</h2>
+    <p class="section-subtitle">연구 과제 현황</p>
+
+    <!-- 진행 중 -->
+    <h3 class="subsection-title">
+      진행 중인 연구 과제
+      <span class="badge">ONGOING</span>
+      <span class="count">3건</span>
+    </h3>
+    <div class="project-grid" style="margin-bottom: 60px;">
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-number">01</span>
+          <span class="status">ONGOING</span>
+        </div>
+        <p class="agency">기후에너지환경부</p>
+        <h3>토양 내 광물-유기물 자가조립 기반 차세대 탄소 흡수 플랫폼 개발</h3>
+        <p class="date"><i class="far fa-calendar"></i> 2026 – 2030</p>
+      </div>
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-number">02</span>
+          <span class="status">ONGOING</span>
+        </div>
+        <p class="agency">기후에너지환경부</p>
+        <h3>과불화화합물 제거를 위한 유무기 흡착제 고도화 기술 개발</h3>
+        <p class="date"><i class="far fa-calendar"></i> 2026 – 2030</p>
+      </div>
+      <div class="project-card">
+        <div class="project-header">
+          <span class="project-number">03</span>
+          <span class="status">ONGOING</span>
+        </div>
+        <p class="agency">국립환경과학원</p>
+        <h3>하천, 호소 퇴적물 정밀조사 체계 구축을 위한 통합 평가 방법 연구</h3>
+        <p class="date"><i class="far fa-calendar"></i> 2026</p>
+      </div>
+    </div>
+
+    <!-- 완료 (placeholder — 사용자가 추후 채움) -->
+    <h3 class="subsection-title">
+      완료된 연구 과제
+      <span class="badge completed">COMPLETED</span>
+      <span class="count">6건</span>
+    </h3>
+    <div class="project-grid">
+      <div class="project-card placeholder">
+        <div class="project-header">
+          <span class="project-number">01</span>
+          <span class="status completed">COMPLETED</span>
+        </div>
+        <p class="agency">(기관명)</p>
+        <h3>(완료된 과제명을 입력하세요)</h3>
+        <p class="date"><i class="far fa-calendar"></i> YYYY – YYYY</p>
+      </div>
+      <div class="project-card placeholder">
+        <div class="project-header">
+          <span class="project-number">02</span>
+          <span class="status completed">COMPLETED</span>
+        </div>
+        <p class="agency">(기관명)</p>
+        <h3>(완료된 과제명을 입력하세요)</h3>
+        <p class="date"><i class="far fa-calendar"></i> YYYY – YYYY</p>
+      </div>
+      <div class="project-card placeholder">
+        <div class="project-header">
+          <span class="project-number">03</span>
+          <span class="status completed">COMPLETED</span>
+        </div>
+        <p class="agency">(기관명)</p>
+        <h3>(완료된 과제명을 입력하세요)</h3>
+        <p class="date"><i class="far fa-calendar"></i> YYYY – YYYY</p>
+      </div>
+      <div class="project-card placeholder">
+        <div class="project-header">
+          <span class="project-number">04</span>
+          <span class="status completed">COMPLETED</span>
+        </div>
+        <p class="agency">(기관명)</p>
+        <h3>(완료된 과제명을 입력하세요)</h3>
+        <p class="date"><i class="far fa-calendar"></i> YYYY – YYYY</p>
+      </div>
+      <div class="project-card placeholder">
+        <div class="project-header">
+          <span class="project-number">05</span>
+          <span class="status completed">COMPLETED</span>
+        </div>
+        <p class="agency">(기관명)</p>
+        <h3>(완료된 과제명을 입력하세요)</h3>
+        <p class="date"><i class="far fa-calendar"></i> YYYY – YYYY</p>
+      </div>
+      <div class="project-card placeholder">
+        <div class="project-header">
+          <span class="project-number">06</span>
+          <span class="status completed">COMPLETED</span>
+        </div>
+        <p class="agency">(기관명)</p>
+        <h3>(완료된 과제명을 입력하세요)</h3>
+        <p class="date"><i class="far fa-calendar"></i> YYYY – YYYY</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- People -->
+<section class="section alt" id="people">
+  <div class="container">
+    <h2 class="section-title">People</h2>
+    <p class="section-subtitle">연구진 소개</p>
+
+    <!-- PI -->
+    <h3 class="subsection-title">
+      Principal Investigator
+      <span class="badge">PI</span>
+    </h3>
+    <div class="people-card">
+      <div class="profile">
+        <img src="profile.png" alt="Saerom Park">
+        <h3>Saerom Park, Ph.D.</h3>
+        <p class="position">Assistant Professor</p>
+      </div>
+      <div class="info">
+        <h4>Education</h4>
+        <ul>
+          <li><strong>2017</strong> Purdue University, Department of Agronomy – Environmental Chemistry (Ph.D.)</li>
+          <li><strong>2013</strong> Purdue University, Department of Agronomy – Environmental Chemistry (M.S.)</li>
+          <li><strong>2009</strong> 고려대학교, 생명과학대 환경생태공학부 (B.S.)</li>
+        </ul>
+        <h4>Academic Experience</h4>
+        <ul>
+          <li><strong>2026–Present</strong> 조교수, 수원대학교</li>
+          <li><strong>2023–2026</strong> 부교수, 과학연합대학원대학교 (University of Science and Technology, UST)</li>
+          <li><strong>2020–2026</strong> 수석연구원, 한국건설기술연구원 (Korea Institute of Civil Engineering and Building Technology, KICT)</li>
+          <li><strong>2018–2019</strong> 박사후연구원, 한국과학기술연구원 (Korea Institute of Science and Technology, KIST)</li>
+          <li><strong>2017</strong> 박사후연구원, The University of Georgia</li>
+          <li><strong>2010</strong> 연구원, 국립농업과학원</li>
+        </ul>
+        <h4>Honors and Awards</h4>
+        <ul>
+          <li><strong>2024</strong> 장관상, 과학기술정보통신부</li>
+          <li><strong>2017</strong> Bilsland Dissertation Fellowship, Purdue University</li>
+          <li><strong>2015</strong> 2nd Place Student Poster Award, Fluoros 2015 Conference</li>
+          <li><strong>2014</strong> Best Poster Award, 20th World Congress of Soil Science</li>
+          <li><strong>2012</strong> Scarseth Scholarship, Purdue University</li>
+          <li><strong>2008</strong> 학기 최우등생, 고려대학교</li>
+          <li><strong>2007</strong> 학기 최우등생, 고려대학교</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Members -->
+    <h3 class="subsection-title" style="margin-top:56px;">
+      Members
+      <span class="badge">JOIN US</span>
+    </h3>
+
+    <div class="members-cta">
+      <i class="fas fa-user-plus"></i>
+      <h3>We're Looking for New Members</h3>
+      <p class="ko">환경화학 또는 인공지능에 관심있는 학생들의 지원을 언제든지 환영합니다.</p>
+      <p class="en">Students who are interested in Environmental Chemistry or AI are always welcome to join us.</p>
+      <a href="mailto:saerom@suwon.ac.kr" class="btn"><i class="fas fa-envelope"></i> Contact PI</a>
+    </div>
+
+    <div class="member-grid">
+      <div class="member-card">
+        <div class="member-avatar"><i class="fas fa-user-graduate"></i></div>
+        <p class="role">Ph.D. Student</p>
+        <p class="vacancy">Position open</p>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar"><i class="fas fa-user-graduate"></i></div>
+        <p class="role">M.S. Student</p>
+        <p class="vacancy">Position open</p>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar"><i class="fas fa-user"></i></div>
+        <p class="role">Undergraduate</p>
+        <p class="vacancy">Position open</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Publications -->
+<section class="section" id="publications">
+  <div class="container">
+    <h2 class="section-title">Publications</h2>
+    <p class="section-subtitle">연구 논문</p>
+    <div class="pub-actions">
+      <a href="https://scholar.google.com/citations?user=5JjzBkwAAAAJ&hl=en" target="_blank" class="btn btn-primary">
+        <i class="fas fa-graduation-cap"></i> View Google Scholar Profile
+      </a>
+    </div>
+    <ol class="pub-list" reversed>
+      <li>S. E. Oh, S. J. Oh, Y. Lee*, S. Park* (2026, In preparation) Machine Learning-Driven Prediction of Post-TOP Assay PFAS concentrations: A Precursor-to-Product Modeling Approach</li>
+      <li>S. G. Yoon, H. Kim, S. Park, D. H. Moon*, I. S. Kwak, J. An (2026, In review) Increased mobility and bioaccessibility of arsenate adsorbed onto UV-aged polyvinyl chloride microplastics <i>Ecotoxicology and Environmental Safety</i></li>
+      <li>Y. E. Lee, Y. J.*, I. T. Kim, S. Park, K. H. Ahn, J. H. Jung (2026, In review) Organic Acid-Mediated Calcium Recovery and Indirect Carbonation using Food Waste-Derived Biochar <i>Waste Management</i></li>
+      <li>S. J. Oh, J. Chung, M. Kwon, S. Park*, S. Lee* (2026, In review) Coupled effects of infiltration rate and soil texture on nitrate behavior in the unsaturated soil columns <i>Journal of Environmental Management</i></li>
+      <li>Y. E. Lee, S. Park*, J. An*, I. T. Kim (2025) Photo-weathering effects on pyrolysis-GC/MS quantification of Microplastics: Surface oxidation correlations and correction strategies <i>Environmental Pollution</i></li>
+      <li>W. Lee, A. Lee, Y. Choi, J. C. Joo, S. Park* (2025) Poly- and perfluoroalkyl substances (PFAS) pollution in South Korean water systems: A critical review of occurrence patterns and regulatory gaps <i>Environmental Engineering Research</i></li>
+      <li>S. Park, D. J. Baek, J. An* (2025) Refinement of post-acidification steps in the unified BARGE method for determination of metal bioaccessibility in consumer products <i>Analytica Chimica Acta</i></li>
+      <li>G. T. Chavan, R. S. Ingole, P. Rosaiah, M. R. Karim, S. Park*, J. An* (2025) Nanoarchitectured CuAlS@CoMn-layered double hydroxide hybrids for efficient water splitting <i>Journal of Power Sources</i></li>
+      <li>B. Lee, S. H. Lee, J. Lee, N. K. Kim, I. Kim, S. Park, S. Kim, S. Y. Ham, H. D. Park, D. Im, H. S. Kim (2025) Influence of wastewater type on microbial community compositions including pathogenic bacteria within wastewater treatment processes <i>Sustainable Environment Research</i></li>
+      <li>J. K. Hong, S. J. Oh, T. K. Lee, S. Park* (2025) Matrix-specific PFAS source allocation machine learning models: Identifying differential indicators in soil and water systems <i>Environmental Research</i></li>
+      <li>S. S. Park, S. G. Yoon, J. Y. Lee, J. An* (2025) Synergistic interplay of weathered microplastics: Coupling sorption-leaching behavior and environmental risk implications <i>Journal of Hazardous Materials Advances</i></li>
+      <li>S. Park*, H. Seok, D. Oh, S. Kim, J. Ahn (2024) Machine learning-based prediction of adsorption capacity of metal-doped and undoped activated carbon: Assessing the role of metal doping <i>Chemosphere</i></li>
+      <li>J. K. Hong, T. K. Lee, I. Kim, S. Park* (2024) Determination of microbial colonization on microplastics through wastewater treatment processes: The role of polymer type and sequential treatment <i>Science of the Total Environment</i></li>
+      <li>J. K. Hong, H. Oh, T. K. Lee, S. Kim, D. Oh, J. An, S. Park* (2023) Tracking the Evolution of Microbial Communities on Microplastics through a Wastewater treatment process: Insight into "Plastisphere" <i>Water</i></li>
+      <li>S. Park, I. Kim, W. H. Jeon, H. S. Moon* (2023) Exploring the vertical transport of microplastics in subsurface environments: Lab-scale experiments and field evidence <i>Journal of Contaminant Hydrology</i></li>
+      <li>S. J. Oh, K. Cho, S. Park, M. J. Kwon, J. Chung, S. Lee* (2023) Denitrification dynamics in unsaturated soils with different porous structures and water saturation degrees: A focus on the shift in microbial community structures <i>Journal of Hazardous Materials</i></li>
+      <li>B. Lee, H. Kang, H. Oh, J. Ahn, S. Park, S. L. Yun, S. Kim (2022) Long-term examination of water chemistry changes following treatment of cyanobacterial bloom with Coagulants and Minerals <i>IJERPH</i></li>
+      <li>H. Kang, S. Park, B. Lee, I. Kim, S. Kim* (2022) Concentration of Microplastics in road dust as a function of the drying period — A case study in G city, Korea <i>Sustainability</i></li>
+      <li>S. Park, S. J. Oh, I. Kim* (2021) Role of borate buffer in organic degradation by peroxymonosulfate in the presence of metal oxides <i>Water</i></li>
+      <li>H. Kang, S. Park, B. Lee, J. Ahn, S. Kim* (2021) Impact of Chitosan pretreatment to reduce Microfibers released from synthetic garments during laundering <i>Water</i></li>
+      <li>H. Woo, I. Kim, S. Park* (2021) Estimating the Reducing power of carbon nanotubes and Granular activated carbon using various compounds <i>Water</i></li>
+      <li>S. An, P. K. Kang, P. J. Stuyfzand, W. Lee, S. Park, S. T. Yun, S. Lee* (2021) Identification of Iron and sulfate release processes during riverbank filtration using chemical mass balance modeling <i>Environmental Geochemistry and Health</i></li>
+      <li>S. Park, E. J. Kim, S. Adil, S. Lee, K. Cho* (2021) Biogeochemical alteration of an Aquifer soil during In-situ chemical oxidation by hydrogen peroxide and peroxymonosulfate <i>Environmental Science &amp; Technology</i></li>
+      <li>S. Park, T. M. Anggraini, J. Chung, P. K. Kang, S. Lee* (2021) Microfluidic pore model study of precipitates induced by the pore scale mixing of an iron sulfate solution with simulated groundwater <i>Chemosphere</i></li>
+      <li>S. Park, L. S. Lee*, I. Ross, J. Hurst (2020) Evaluating perfluorooctane sulfonate oxidation in permanganate systems <i>Environmental Science and Pollution Research</i></li>
+      <li>S. Park, J. E. Zenobio, L. S. Lee* (2018) PFOS removal with Pd/nFe nanoparticles: Adsorption or aqueous Fe-complexation, not transformation? <i>Journal of Hazardous Materials</i></li>
+      <li>S. Park, C. de Perre, L. S. Lee* (2017) Alternate Reductants with VB12 to Transform C8 and C6 Perfluoroalkyl sulfonates: Limitations and Insights into Isomer-Specific Transformation rates, products, and pathways <i>Environmental Science &amp; Technology</i></li>
+      <li>S. Park, L. S. Lee*, V. F. Medina, A. Zull, S. Waisner (2016) Heat-activated persulfate oxidation of PFOA, 6:2 fluorotelomer sulfonate, and PFOS under conditions suitable for in-situ groundwater remediation <i>Chemosphere</i></li>
+    </ol>
+    <p class="pub-source">* Total 28 publications</p>
+  </div>
+</section>
+
+<!-- Notice -->
+<section class="section alt" id="notice">
+  <div class="container">
+    <h2 class="section-title">Notice</h2>
+    <p class="section-subtitle">학생 모집 및 안내</p>
+    <div class="notice-box">
+      <p class="lead-ko">환경화학 또는 AI에 관심있는 학생들은 언제든지 환영합니다.</p>
+      <p class="lead-en">Students who are interested in Environmental Chemistry or AI are always welcome to join us.</p>
+      <hr>
+      <h3 class="notice-subtitle"><i class="fab fa-youtube"></i> Related Videos</h3>
+      <ul class="video-list">
+        <li>
+          <a href="https://www.youtube.com/watch?v=crWNzpNYw_s" target="_blank" rel="noopener" class="video-card">
+            <div class="video-thumb">
+              <img src="https://img.youtube.com/vi/crWNzpNYw_s/hqdefault.jpg" alt="다크 워터스 PFAS 리뷰" loading="lazy">
+            </div>
+            <div class="video-info">
+              <p class="title">인류 99%가 노출되었다는 PFAS(과불화화합물), 왜 문제가 될까? [다크 워터스(2019) 리뷰]</p>
+              <span class="platform"><i class="fab fa-youtube"></i> YouTube</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=Butm0e3h3Ic" target="_blank" rel="noopener" class="video-card">
+            <div class="video-thumb">
+              <img src="https://img.youtube.com/vi/Butm0e3h3Ic/hqdefault.jpg" alt="종이 빨대 vs 플라스틱 빨대" loading="lazy">
+            </div>
+            <div class="video-info">
+              <p class="title">종이 빨대 vs 플라스틱 빨대! 당신의 선택은? 친환경 빨대란 무엇인가?</p>
+              <span class="platform"><i class="fab fa-youtube"></i> YouTube</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=Uu1uyZjPMss" target="_blank" rel="noopener" class="video-card">
+            <div class="video-thumb">
+              <img src="https://img.youtube.com/vi/Uu1uyZjPMss/hqdefault.jpg" alt="종이 빨대 친환경 안될과학" loading="lazy">
+            </div>
+            <div class="video-info">
+              <p class="title">종이 빨대는 과연 친환경적일까? 빨대 사용에 대한 우리의 노력!</p>
+              <span class="platform"><i class="fab fa-youtube"></i> YouTube · 안될과학</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=kyvJ5hQWk-Y" target="_blank" rel="noopener" class="video-card">
+            <div class="video-thumb">
+              <img src="https://img.youtube.com/vi/kyvJ5hQWk-Y/hqdefault.jpg" alt="과학입잡담 EP2 연구원 브이로그" loading="lazy">
+            </div>
+            <div class="video-info">
+              <p class="title">[과학입잡담 EP2] 연구원 브이로그 — 워라밸을 지키는 법</p>
+              <span class="platform"><i class="fab fa-youtube"></i> YouTube · 과학입잡담</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=rw0jHbgU62Y" target="_blank" rel="noopener" class="video-card">
+            <div class="video-thumb">
+              <img src="https://img.youtube.com/vi/rw0jHbgU62Y/hqdefault.jpg" alt="과학입잡담 EP14 시즌 마무리" loading="lazy">
+            </div>
+            <div class="video-info">
+              <p class="title">[과학입잡담 EP14] 시즌 마무리 결산 — 근황토크 + 시청자 Q&amp;A</p>
+              <span class="platform"><i class="fab fa-youtube"></i> YouTube · 과학입잡담</span>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=1Sc-9kmuMIk" target="_blank" rel="noopener" class="video-card">
+            <div class="video-thumb">
+              <img src="https://img.youtube.com/vi/1Sc-9kmuMIk/hqdefault.jpg" alt="건강을 위협하는 미세플라스틱" loading="lazy">
+            </div>
+            <div class="video-info">
+              <p class="title">건강을 위협하는 미세플라스틱 — 일상생활에서 플라스틱 사용을 줄이는 방법</p>
+              <span class="platform"><i class="fab fa-youtube"></i> YouTube · 슬기로운 아침 110회</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Related News -->
+      <h3 class="notice-subtitle"><i class="far fa-newspaper"></i> Related News</h3>
+      <ul class="news-grid">
+        <li>
+          <a href="https://v.daum.net/v/20251208070227560" target="_blank" rel="noopener" class="news-card">
+            <div class="news-thumb green">
+              <span class="news-cat">미세플라스틱</span>
+              <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" width="200" height="130">
+                <!-- 물결 배경 -->
+                <path d="M 0 95 Q 50 85 100 92 T 200 90 L 200 130 L 0 130 Z" fill="#fff" opacity="0.12"/>
+                <path d="M 0 108 Q 50 100 100 105 T 200 102 L 200 130 L 0 130 Z" fill="#fff" opacity="0.18"/>
+                <!-- 미세플라스틱 입자 -->
+                <g stroke="#fff" stroke-width="1.4" stroke-opacity="0.6">
+                  <polygon points="55,40 70,35 75,52 65,60 53,52" fill="#ffc44d" opacity="0.85"/>
+                  <polygon points="100,28 118,32 120,48 105,50" fill="#fff" opacity="0.7"/>
+                  <polygon points="140,52 154,48 160,62 150,72 142,64" fill="#f4a300" opacity="0.85"/>
+                  <circle cx="170" cy="38" r="6" fill="#fff" opacity="0.7"/>
+                  <circle cx="35" cy="68" r="5" fill="#ffc44d" opacity="0.7"/>
+                  <polygon points="80,72 92,68 96,82 84,86" fill="#fff" opacity="0.6"/>
+                </g>
+              </svg>
+            </div>
+            <div class="news-body">
+              <h4>[과학을 읽다] ① 수돗물 속 '보이지 않는 조각들'</h4>
+              <div class="news-meta">
+                <span class="source">아시아경제</span>
+                <span class="date"><i class="far fa-calendar"></i> 2025.12.08</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://www.wiznews.co.kr/news/articleView.html?idxno=10615" target="_blank" rel="noopener" class="news-card">
+            <div class="news-thumb brown">
+              <span class="news-cat">토양 정화</span>
+              <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" width="200" height="130">
+                <!-- 토양 단면 -->
+                <rect x="0" y="80" width="200" height="50" fill="#5a3d18" opacity="0.6"/>
+                <rect x="0" y="95" width="200" height="35" fill="#3d2810" opacity="0.5"/>
+                <!-- 새싹 -->
+                <g transform="translate(100,80)">
+                  <line x1="0" y1="0" x2="0" y2="-30" stroke="#7fc66f" stroke-width="2.5"/>
+                  <ellipse cx="-10" cy="-25" rx="11" ry="6" fill="#9fdc8c" transform="rotate(-30 -10 -25)"/>
+                  <ellipse cx="10" cy="-22" rx="11" ry="6" fill="#9fdc8c" transform="rotate(30 10 -22)"/>
+                  <ellipse cx="0" cy="-32" rx="9" ry="5" fill="#bfeaaf"/>
+                </g>
+                <!-- 정화 작용 (분자/입자) -->
+                <g fill="#ffc44d" opacity="0.85">
+                  <circle cx="40" cy="50" r="4"/>
+                  <circle cx="60" cy="60" r="3"/>
+                  <circle cx="155" cy="50" r="4"/>
+                  <circle cx="175" cy="62" r="3"/>
+                </g>
+                <g fill="#fff" opacity="0.5">
+                  <circle cx="50" cy="35" r="2"/>
+                  <circle cx="165" cy="35" r="2"/>
+                  <circle cx="30" cy="65" r="2.5"/>
+                  <circle cx="180" cy="45" r="2"/>
+                </g>
+                <!-- 위에서 내려오는 화살표 -->
+                <g stroke="#ffc44d" stroke-width="1.5" fill="none" opacity="0.7">
+                  <line x1="40" y1="20" x2="40" y2="40"/>
+                  <polyline points="36,36 40,40 44,36" stroke-linecap="round"/>
+                  <line x1="160" y1="20" x2="160" y2="40"/>
+                  <polyline points="156,36 160,40 164,36" stroke-linecap="round"/>
+                </g>
+              </svg>
+            </div>
+            <div class="news-body">
+              <h4>오염된 토양, 현장에서 정화하는 친환경 기술 개발</h4>
+              <div class="news-meta">
+                <span class="source">위즈뉴스</span>
+                <span class="date"><i class="far fa-calendar"></i> 2021</span>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="section" id="contact">
+  <div class="container">
+    <h2 class="section-title">Contact</h2>
+    <p class="section-subtitle">연락처 및 위치</p>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <dl>
+          <dt>Name</dt><dd>Saerom Park</dd>
+          <dt>Position</dt><dd>Assistant Professor</dd>
+          <dt>Affiliation</dt><dd>Department of Civil and Environmental Engineering<br>The University of Suwon</dd>
+          <dt>Email</dt><dd><a href="mailto:saerom@suwon.ac.kr">saerom@suwon.ac.kr</a></dd>
+          <dt>Office</dt><dd>미래혁신관 614호</dd>
+          <dt>Address</dt><dd>17 Wauan-gil, Bongdam-eup,<br>Hwaseong-si, Gyeonggi-do, Republic of Korea</dd>
+        </dl>
+      </div>
+      <div class="contact-cta">
+        <h3>Join Our Lab</h3>
+        <p>환경화학과 AI의 융합 연구에 관심있는 학생들의 지원을 환영합니다. 이메일로 문의해 주세요.</p>
+        <a href="mailto:saerom@suwon.ac.kr" class="btn"><i class="fas fa-envelope"></i> Send Email</a>
+        <a href="https://scholar.google.com/citations?user=5JjzBkwAAAAJ&hl=en" target="_blank" class="btn"><i class="fas fa-graduation-cap"></i> Google Scholar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <div class="logo-icon">SEC</div>
+        <span class="logo-text">SEC Lab.</span>
+        <span class="logo-sub">Smart Environmental Chemistry Lab</span>
+      </div>
+      <div class="footer-info">
+        <p><strong>Department of Civil and Environmental Engineering</strong></p>
+        <p>The University of Suwon</p>
+        <p>17 Wauan-gil, Bongdam-eup, Hwaseong-si, Gyeonggi-do, Korea</p>
+        <p><i class="fas fa-envelope"></i> saerom@suwon.ac.kr</p>
+      </div>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#projects">Projects</a>
+        <a href="#people">People</a>
+        <a href="#publications">Publications</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Smart Environmental Chemistry Lab. The University of Suwon. All rights reserved.</p>
+    </div>
+  </div>
 </footer>
 
-<!-- 🔥 핵심 JS -->
 <script>
-  const links = document.querySelectorAll("nav a");
-  const sections = document.querySelectorAll("section");
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const menu = document.querySelector('.nav-menu');
+  hamburger?.addEventListener('click', () => menu.classList.toggle('open'));
 
-  links.forEach(link => {
-    link.addEventListener("click", function(e) {
+  // Navbar scroll shadow
+  const navbar = document.querySelector('.navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // Section toggle (랜딩=hero+about, 기타=해당 섹션만)
+  const hero = document.getElementById('top');
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.nav-menu a');
+  const logo = document.querySelector('.logo');
+
+  function showSection(id) {
+    sections.forEach(s => s.classList.remove('active'));
+    navLinks.forEach(a => a.classList.remove('active'));
+
+    if (id === 'about') {
+      hero.classList.add('active');
+    } else {
+      hero.classList.remove('active');
+    }
+
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+
+    const link = document.querySelector(`.nav-menu a[href="#${id}"]`);
+    if (link) link.classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    menu?.classList.remove('open');
+  }
+
+  // 메뉴 클릭
+  navLinks.forEach(a => {
+    a.addEventListener('click', e => {
       e.preventDefault();
-
-      const target = this.getAttribute("href").substring(1);
-
-      sections.forEach(sec => sec.classList.remove("active"));
-
-      document.getElementById(target).classList.add("active");
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const id = a.getAttribute('href').substring(1);
+      showSection(id);
+      history.replaceState(null, '', `#${id}`);
     });
   });
+
+  // 로고 클릭 = 랜딩 복귀
+  logo?.addEventListener('click', e => {
+    e.preventDefault();
+    showSection('about');
+    history.replaceState(null, '', '#about');
+  });
+
+  // Footer 링크도 동일 처리
+  document.querySelectorAll('.footer-links a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const id = a.getAttribute('href').substring(1);
+      showSection(id);
+      history.replaceState(null, '', `#${id}`);
+    });
+  });
+
+  // About 섹션 내 'Get in Touch' 등 in-page 링크 처리
+  document.querySelectorAll('.section a[href^="#"], .hero a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href.length > 1) {
+        e.preventDefault();
+        showSection(href.substring(1));
+        history.replaceState(null, '', href);
+      }
+    });
+  });
+
+  // 초기 진입: URL 해시 반영
+  const initial = window.location.hash.substring(1) || 'about';
+  if (initial !== 'about') showSection(initial);
+  else {
+    document.querySelector('.nav-menu a[href="#about"]')?.classList.add('active');
+  }
 </script>
 
 </body>
